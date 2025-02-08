@@ -14,4 +14,4 @@ spring:
       ddl-auto: update
 
   liquibase:
-    change-log: classpath:db/changelog/01.create-user-table.yaml
+    change-log: classpath:db/changelog/master.yaml
