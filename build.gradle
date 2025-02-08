@@ -2,6 +2,7 @@ plugins {
     id 'org.springframework.boot' version '3.1.0'
     id 'io.spring.dependency-management' version '1.1.0'
     id 'java'
+    id "jacoco"
 }
 
 group = 'com.kuro.coffechain'
@@ -47,5 +48,16 @@ tasks.withType(Test).configureEach {
     useJUnitPlatform()
     filter {
         includeTestsMatching "com.kuro.coffechain.cucumber.*"
+    }
+}
+
+
+jacocoTestReport {
+    executionData tasks.withType(Test)
+    classDirectories.from = files(sourceSets.main.output.classesDirs)
+    sourceDirectories.from = files(sourceSets.main.java.srcDirs)
+
+    reports {
+        xml.required = true
     }
 }
