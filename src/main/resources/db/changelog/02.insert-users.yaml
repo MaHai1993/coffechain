@@ -1,0 +1,36 @@
+databaseChangeLog:
+  - changeSet:
+      id: 2
+      author: kuro
+      changes:
+        - insert:
+            tableName: users
+            columns:
+              - column:
+                  name: id
+                  valueComputed: random_uuid() # Generates a UUID
+              - column:
+                  name: name
+                  value: "Kuro"
+              - column:
+                  name: email
+                  value: "kuro@example.com"
+              - column:
+                  name: role
+                  value: "ADMIN"
+
+        - insert:
+            tableName: users
+            columns:
+              - column:
+                  name: id
+                  valueComputed: random_uuid()
+              - column:
+                  name: name
+                  value: "User"
+              - column:
+                  name: email
+                  value: "janedoe@example.com"
+              - column:
+                  name: role
+                  value: "USER"
