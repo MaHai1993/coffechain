@@ -1,0 +1,72 @@
+databaseChangeLog:
+  - changeSet:
+      id: test-data
+      author: kuro
+      changes:
+        # Insert test data for users
+        - insert:
+            tableName: users
+            columns:
+              - column: { name: id, value: "81317850-2732-4000-af88-ff80db313139" }
+              - column: { name: name, value: "Test User" }
+              - column: { name: email, value: "testuser@example.com" }
+              - column: { name: role, value: "CUSTOMER" }
+              - column: { name: created_by, value: "system" }
+              - column: { name: created_date, valueComputed: "CURRENT_TIMESTAMP" }
+              - column: { name: last_modified_by, value: "system" }
+              - column: { name: last_modified_date, valueComputed: "CURRENT_TIMESTAMP" }
+
+        # Insert test data for customers
+        - insert:
+            tableName: customers
+            columns:
+              - column: { name: id, value: "81317850-2732-4000-af88-ff80db313139" }
+              - column: { name: mobile_number, value: "+1234567890" }
+              - column: { name: name, value: "John customer" }
+              - column: { name: address, value: "123 Coffee Street, Brewtown" }
+              - column: { name: created_by, value: "system" }
+              - column: { name: created_date, valueComputed: "CURRENT_TIMESTAMP" }
+              - column: { name: last_modified_by, value: "system" }
+              - column: { name: last_modified_date, valueComputed: "CURRENT_TIMESTAMP" }
+
+        # Insert test data for coffee_shops
+        - insert:
+            tableName: coffee_shops
+            columns:
+              - column: { name: id, value: "5a1c7b66-91a2-4ef2-bb3a-77d634e6f41d" }
+              - column: { name: name, value: "Central Perk" }
+              - column: { name: location, value: "New York, NY" }
+              - column: { name: contact_details, value: "+1987654321" }
+              - column: { name: max_queues, valueNumeric: 99 }
+              - column: { name: created_by, value: "system" }
+              - column: { name: created_date, valueComputed: "CURRENT_TIMESTAMP" }
+              - column: { name: last_modified_by, value: "system" }
+              - column: { name: last_modified_date, valueComputed: "CURRENT_TIMESTAMP" }
+
+        # Insert test data for menu_items
+        - insert:
+            tableName: menu_items
+            columns:
+              - column: { name: id, value: "d3f6c987-9a6b-4a36-b1f4-1c78eecfdf98" }
+              - column: { name: name, value: "Espresso" }
+              - column: { name: price, valueNumeric: 3.99 }
+              - column: { name: coffee_shop_id, value: "5a1c7b66-91a2-4ef2-bb3a-77d634e6f41d" }
+              - column: { name: created_by, value: "system" }
+              - column: { name: created_date, valueComputed: "CURRENT_TIMESTAMP" }
+              - column: { name: last_modified_by, value: "system" }
+              - column: { name: last_modified_date, valueComputed: "CURRENT_TIMESTAMP" }
+
+        # Insert test data for orders
+        - insert:
+            tableName: orders
+            columns:
+              - column: { name: id, value: "e1b0f712-3c64-4b2f-9331-8d3f2d53a75a" }
+              - column: { name: customer_id, value: "81317850-2732-4000-af88-ff80db313139" }
+              - column: { name: coffee_shop_id, value: "5a1c7b66-91a2-4ef2-bb3a-77d634e6f41d" }
+              - column: { name: menu_item_id, value: "d3f6c987-9a6b-4a36-b1f4-1c78eecfdf98" }
+              - column: { name: order_status, value: "PENDING" }
+              - column: { name: queue_position, valueNumeric: 1 }
+              - column: { name: created_by, value: "system" }
+              - column: { name: created_date, valueComputed: "CURRENT_TIMESTAMP" }
+              - column: { name: last_modified_by, value: "system" }
+              - column: { name: last_modified_date, valueComputed: "CURRENT_TIMESTAMP" }

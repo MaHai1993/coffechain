@@ -1,6 +1,6 @@
 databaseChangeLog:
   - changeSet:
-      id: 2
+      id: 1
       author: kuro
       changes:
         - insert:
@@ -8,19 +8,25 @@ databaseChangeLog:
             columns:
               - column:
                   name: id
-                  valueComputed: gen_random_uuid() # Generates a UUID
-              - column:
-                  name: name
-                  value: "Kuro"
+                  valueComputed: gen_random_uuid()
               - column:
                   name: email
                   value: "kuro@example.com"
+              - column:
+                  name: name
+                  value: "Kuro Ma"
               - column:
                   name: password
                   value: "password"
               - column:
                   name: role
                   value: "ADMIN"
+              - column:
+                  name: created_by
+                  value: "system"
+              - column:
+                  name: created_date
+                  valueComputed: "CURRENT_TIMESTAMP"
 
         - insert:
             tableName: users
@@ -29,14 +35,20 @@ databaseChangeLog:
                   name: id
                   valueComputed: gen_random_uuid()
               - column:
-                  name: name
-                  value: "User"
-              - column:
                   name: email
-                  value: "janedoe@example.com"
+                  value: "test-user@example.com"
+              - column:
+                  name: name
+                  value: "Test User"
               - column:
                   name: password
                   value: "password"
               - column:
                   name: role
                   value: "USER"
+              - column:
+                  name: created_by
+                  value: "system"
+              - column:
+                  name: created_date
+                  valueComputed: "CURRENT_TIMESTAMP"
