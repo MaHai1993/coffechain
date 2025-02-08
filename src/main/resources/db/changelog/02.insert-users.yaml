@@ -8,13 +8,16 @@ databaseChangeLog:
             columns:
               - column:
                   name: id
-                  valueComputed: random_uuid() # Generates a UUID
+                  valueComputed: gen_random_uuid() # Generates a UUID
               - column:
                   name: name
                   value: "Kuro"
               - column:
                   name: email
                   value: "kuro@example.com"
+              - column:
+                  name: password
+                  value: "password"
               - column:
                   name: role
                   value: "ADMIN"
@@ -24,13 +27,16 @@ databaseChangeLog:
             columns:
               - column:
                   name: id
-                  valueComputed: random_uuid()
+                  valueComputed: gen_random_uuid()
               - column:
                   name: name
                   value: "User"
               - column:
                   name: email
                   value: "janedoe@example.com"
+              - column:
+                  name: password
+                  value: "password"
               - column:
                   name: role
                   value: "USER"
