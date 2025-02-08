@@ -1,0 +1,62 @@
+# Compiled Java class files
+*.class
+
+# Log files
+*.log
+
+# Ignore Java binaries
+*.jar
+*.war
+*.ear
+
+# Maven target directory
+/target/
+/pom.xml.tag
+/pom.xml.releaseBackup
+/pom.xml.versionsBackup
+/logs/
+/mvnw
+/mvnw.cmd
+
+# Gradle build directory
+/.gradle/
+/build/
+/out/
+/bin/
+/.gradle
+/gradlew
+/gradlew.bat
+
+# IntelliJ IDEA files
+/.idea/
+/*.iml
+/*.ipr
+/*.iws
+
+# Eclipse IDE files
+/.metadata/
+/*.classpath
+/*.project
+/.settings/
+
+# VS Code settings
+/.vscode/
+
+# OS-specific files
+.DS_Store
+Thumbs.db
+
+# Test reports
+/test-output/
+/surefire-reports/
+/jacoco/
+
+# Docker files
+/.dockerignore
+docker-compose.override.yml
+
+# Spring Boot specific files
+/*.h2.db
+/*.mv.db
+/*.log
+/*.pid
