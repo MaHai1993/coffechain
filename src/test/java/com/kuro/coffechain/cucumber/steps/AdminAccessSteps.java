@@ -21,6 +21,7 @@ public class AdminAccessSteps extends CucumberSpringConfiguration {
     public void i_am_an_admin_user() {
         // Simulating an authenticated admin user with basic auth
         headers.setBasicAuth("admin", "admin");
+        headers.set("Authorization", "Bearer superadmin");
     }
 
     @When("I access the admin dashboard")

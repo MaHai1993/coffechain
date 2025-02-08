@@ -1,5 +1,6 @@
 package com.kuro.coffechain.controller;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -9,7 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class UserController {
 
     @GetMapping("/profile")
-    public String getUserProfile() {
-        return "User Profile Accessed";
+    public ResponseEntity<String> getUserProfile() {
+        return ResponseEntity.ok().body("User Profile Accessed");
     }
 }
