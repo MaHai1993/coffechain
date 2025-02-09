@@ -1,4 +1,4 @@
-package com.kuro.coffechain.ut;
+package com.kuro.coffechain.ut.utils;
 
 import com.kuro.coffechain.utils.DTOConverter;
 import org.junit.jupiter.api.BeforeEach;

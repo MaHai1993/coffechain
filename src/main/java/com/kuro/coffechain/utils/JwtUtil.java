@@ -48,12 +48,12 @@ public class JwtUtil {
         return extractClaim(token, Claims::getExpiration).before(new Date());
     }
 
-    // ✅ Use a Base64-decoded secret key for HMAC
-    private SecretKey getSigningKey() {
+    // Use a Base64-decoded secret key for HMAC
+    protected SecretKey getSigningKey() {
         return Keys.hmacShaKeyFor(Decoders.BASE64.decode(SECRET_KEY));
     }
 
-    // 🔹 Extract All Claims
+    // Extract All Claims
     private Claims extractAllClaims(String token) {
         return Jwts.parser()
                 .verifyWith(getSigningKey()) // ✅ Uses the same key for verification
@@ -62,7 +62,7 @@ public class JwtUtil {
                 .getPayload();
     }
 
-    // 🔹 Extract Specific Claim
+    // Extract Specific Claim
     public <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
         Claims claims = extractAllClaims(token);
         return claimsResolver.apply(claims);

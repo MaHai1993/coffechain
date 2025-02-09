@@ -8,4 +8,9 @@ import java.util.UUID;
 public class ItemDTO {
     private UUID id;
     private int quantity;
+
+    public ItemDTO(UUID id, int quantity) {
+        this.id = id;
+        this.quantity = quantity;
+    }
 }

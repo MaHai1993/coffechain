@@ -24,7 +24,7 @@ public class OrderController {
 
     @PutMapping()
     public ResponseEntity<String> updateOrder(@RequestBody OrderDTO orderDTO) {
-        String result = orderService.updateOrder(orderDTO.getId(), OrderStatus.fromString(orderDTO.getStatus()));
+        String result = orderService.updateOrder(orderDTO.getId(), OrderStatus.fromString(orderDTO.getOrderStatus()));
         return ResponseEntity.ok(result);
     }
 }
