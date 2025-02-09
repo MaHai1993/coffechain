@@ -10,6 +10,12 @@ To start your application in the dev profile, run:
 ./gradlew
 ```
 
+To run the test, run:
+
+```
+./gradlew clean build
+```
+
 ## Others
 
 ### Code quality using Sonar
@@ -63,23 +69,4 @@ spring:
   docker:
     compose:
       enabled: false
-```
-
-You can also fully dockerize your application and all the services that it depends on.
-To achieve this, first build a Docker image of your app by running:
-
-```sh
-npm run java:docker
-```
-
-Or build a arm64 Docker image when using an arm64 processor os like MacOS with M1 processor family running:
-
-```sh
-npm run java:docker:arm64
-```
-
-Then run:
-
-```sh
-docker compose -f src/main/docker/app.yml up -d
 ```
