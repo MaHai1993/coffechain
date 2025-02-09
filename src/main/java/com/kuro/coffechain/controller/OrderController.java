@@ -6,6 +6,8 @@ import com.kuro.coffechain.service.OrderService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.UUID;
+
 @RestController
 @RequestMapping("/order")
 public class OrderController {
@@ -22,9 +24,13 @@ public class OrderController {
         return ResponseEntity.ok(processingOrder);
     }
 
-    @PutMapping()
-    public ResponseEntity<String> updateOrder(@RequestBody OrderDTO orderDTO) {
-        String result = orderService.updateOrder(orderDTO.getId(), OrderStatus.fromString(orderDTO.getOrderStatus()));
+    @PutMapping("/{orderId}")
+    public ResponseEntity<String> updateOrder(
+            @PathVariable UUID orderId,
+            @RequestBody OrderDTO orderDTO) {
+
+        String result = orderService.updateOrder(orderId, OrderStatus.fromString(orderDTO.getOrderStatus()));
         return ResponseEntity.ok(result);
     }
+
 }

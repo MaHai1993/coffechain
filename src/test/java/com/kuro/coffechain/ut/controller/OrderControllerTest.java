@@ -79,7 +79,7 @@ class OrderControllerTest {
         when(orderService.updateOrder(any(UUID.class), any(OrderStatus.class)))
                 .thenReturn("Order updated successfully");
 
-        mockMvc.perform(put("/order")
+        mockMvc.perform(put("/order/" + orderDTO.getId())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(orderDTO)))
                 .andExpect(status().isOk())

@@ -34,6 +34,6 @@ public class AdminAccessSteps extends CucumberSpringConfiguration {
     @Then("I should receive success response")
     public void i_should_receive_success_response() {
         assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertNotEquals("Admin Dashboard Accessed", response.getBody());
+        assertEquals("Admin Dashboard Accessed", response.getBody());
     }
 }

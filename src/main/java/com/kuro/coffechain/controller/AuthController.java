@@ -17,9 +17,9 @@ public class AuthController {
         this.jwtUtil = jwtUtil;
     }
 
+    // Dummy authentication (Replace with DB check)
     @PostMapping("/login")
     public ResponseEntity<Map<String, String>> login(@RequestParam String username, @RequestParam String password) {
-        // Dummy authentication (Replace with DB check)
         if ("admin".equals(username) && "admin".equals(password)) {
             String token = jwtUtil.generateToken(username, "ADMIN");
             return ResponseEntity.ok(Map.of("token", token));

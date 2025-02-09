@@ -35,4 +35,6 @@ public class AdminController {
         List<UserDTO> users = adminService.getAllUsers();
         return ResponseEntity.ok().body(users);
     }
+
+    //TODO: Need to create API to create new user
 }
