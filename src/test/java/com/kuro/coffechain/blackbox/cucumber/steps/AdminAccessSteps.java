@@ -1,6 +1,6 @@
-package com.kuro.coffechain.cucumber.steps;
+package com.kuro.coffechain.blackbox.cucumber.steps;
 
-import com.kuro.coffechain.cucumber.config.CucumberSpringConfiguration;
+import com.kuro.coffechain.blackbox.cucumber.config.CucumberSpringConfiguration;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;

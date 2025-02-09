@@ -1,9 +1,16 @@
 package com.kuro.coffechain.entity;
 
 import com.kuro.coffechain.entity.base.AbstractAuditingEntity;
+import com.kuro.coffechain.enums.OrderStatus;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -25,15 +32,16 @@ public class Order extends AbstractAuditingEntity<UUID> {
     @JoinColumn(name = "coffee_shop_id", nullable = false)
     private CoffeeShop coffeeShop;
 
-    @ManyToOne
-    @JoinColumn(name = "menu_item_id", nullable = false)
-    private MenuItem menuItem;
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<OrderItem> orderItems = new ArrayList<>();
 
     @Column(name = "queue_position", nullable = false)
     private Integer queuePosition;
 
     private Date orderTime;
-    private String status; // PENDING, SERVED, CANCELLED
+
+    @Enumerated(EnumType.STRING)
+    private OrderStatus status = OrderStatus.PENDING;
 
     public UUID getId() {
         return id;

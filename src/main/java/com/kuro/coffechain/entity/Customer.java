@@ -4,12 +4,14 @@ import com.kuro.coffechain.entity.base.AbstractAuditingEntity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.math.BigDecimal;
 import java.util.UUID;
 
 @Entity
 @Table(name = "customers")
 @Getter
 @Setter
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class Customer extends AbstractAuditingEntity<UUID> {
@@ -26,8 +28,7 @@ public class Customer extends AbstractAuditingEntity<UUID> {
 
     private int servedCount; // Number of times served
 
-    @OneToOne(mappedBy = "customer", cascade = CascadeType.ALL)
-    private Queue queue;
+    private BigDecimal spentMoney;
 
     public UUID getId() {
         return id;

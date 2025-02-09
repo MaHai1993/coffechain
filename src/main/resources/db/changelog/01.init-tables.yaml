@@ -193,6 +193,10 @@ databaseChangeLog:
                   type: INT
                   defaultValueNumeric: 0
               - column:
+                  name: spent_money
+                  type: DECIMAL(19,2) # BigDecimal type
+                  defaultValueNumeric: 0.00
+              - column:
                   name: created_by
                   type: VARCHAR(255)
               - column:
@@ -225,22 +229,15 @@ databaseChangeLog:
                   type: UUID
                   constraints:
                     nullable: false
-                    foreignKeyName: fk_orders_customer
               - column:
                   name: coffee_shop_id
                   type: UUID
                   constraints:
                     nullable: false
-                    foreignKeyName: fk_orders_coffee_shop
-              - column:
-                  name: menu_item_id
-                  type: UUID
-                  constraints:
-                    nullable: false
-                    foreignKeyName: fk_orders_menu_item
               - column:
                   name: order_status
                   type: VARCHAR(255)
+                  defaultValue: 'PENDING'
               - column:
                   name: queue_position
                   type: INT
@@ -261,8 +258,70 @@ databaseChangeLog:
                   type: TIMESTAMP
                   defaultValueComputed: CURRENT_TIMESTAMP
 
+        - addForeignKeyConstraint:
+            baseTableName: orders
+            baseColumnNames: customer_id
+            referencedTableName: customers
+            referencedColumnNames: id
+            constraintName: fk_orders_customer
+
+        - addForeignKeyConstraint:
+            baseTableName: orders
+            baseColumnNames: coffee_shop_id
+            referencedTableName: coffee_shops
+            referencedColumnNames: id
+            constraintName: fk_orders_coffee_shop
+
   - changeSet:
       id: 6
+      author: kuro
+      changes:
+        - createTable:
+            tableName: order_items
+            columns:
+              - column:
+                  name: id
+                  type: UUID
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: order_id
+                  type: UUID
+                  constraints:
+                    nullable: false
+              - column:
+                  name: menu_item_id
+                  type: UUID
+                  constraints:
+                    nullable: false
+              - column:
+                  name: quantity
+                  type: INT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: price
+                  type: DECIMAL(10,2)
+                  constraints:
+                    nullable: false
+
+        - addForeignKeyConstraint:
+            baseTableName: order_items
+            baseColumnNames: order_id
+            referencedTableName: orders
+            referencedColumnNames: id
+            constraintName: fk_order_items_order
+
+        - addForeignKeyConstraint:
+            baseTableName: order_items
+            baseColumnNames: menu_item_id
+            referencedTableName: menu_items
+            referencedColumnNames: id
+            constraintName: fk_order_items_menu_item
+
+  - changeSet:
+      id: 7
       author: kuro
       preConditions:
         - onFail: MARK_RAN

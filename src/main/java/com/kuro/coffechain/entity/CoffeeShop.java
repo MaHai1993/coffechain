@@ -21,15 +21,12 @@ public class CoffeeShop extends AbstractAuditingEntity<UUID> {
     private String name;
     private String location;
     private String contactDetails;
-    private int maxQueues; // 1 to 3 queues allowed
+    private int maxQueues;
     private String openingTime;
     private String closingTime;
 
     @OneToMany(mappedBy = "coffeeShop", cascade = CascadeType.ALL)
     private List<MenuItem> menu;
-
-    @OneToMany(mappedBy = "coffeeShop", cascade = CascadeType.ALL)
-    private List<Queue> queues;
 
     public UUID getId() {
         return id;

@@ -1,4 +1,4 @@
-package com.kuro.coffechain.cucumber;
+package com.kuro.coffechain.blackbox.cucumber;
 
 import io.cucumber.junit.Cucumber;
 import io.cucumber.junit.CucumberOptions;

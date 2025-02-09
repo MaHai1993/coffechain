@@ -30,7 +30,7 @@ public class User extends AbstractAuditingEntity<UUID> {
     private Role role;
 
     public enum Role {
-        USER, ADMIN
+        USER, ADMIN, CUSTOMER
     }
 
     public UUID getId() {

@@ -63,7 +63,6 @@ databaseChangeLog:
               - column: { name: id, value: "e1b0f712-3c64-4b2f-9331-8d3f2d53a75a" }
               - column: { name: customer_id, value: "81317850-2732-4000-af88-ff80db313139" }
               - column: { name: coffee_shop_id, value: "5a1c7b66-91a2-4ef2-bb3a-77d634e6f41d" }
-              - column: { name: menu_item_id, value: "d3f6c987-9a6b-4a36-b1f4-1c78eecfdf98" }
               - column: { name: order_status, value: "PENDING" }
               - column: { name: queue_position, valueNumeric: 1 }
               - column: { name: created_by, value: "system" }

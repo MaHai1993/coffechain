@@ -1,4 +1,4 @@
-package com.kuro.coffechain.cucumber.config;
+package com.kuro.coffechain.blackbox.cucumber.config;
 
 import io.cucumber.spring.CucumberContextConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
