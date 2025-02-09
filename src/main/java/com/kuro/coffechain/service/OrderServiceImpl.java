@@ -1,5 +1,6 @@
 package com.kuro.coffechain.service;
 
+import com.kuro.coffechain.dto.CustomerDTO;
 import com.kuro.coffechain.dto.OrderDTO;
 import com.kuro.coffechain.entity.*;
 import com.kuro.coffechain.enums.OrderStatus;
@@ -9,10 +10,10 @@ import com.kuro.coffechain.repository.CustomerRepository;
 import com.kuro.coffechain.repository.MenuItemRepository;
 import com.kuro.coffechain.repository.OrderRepository;
 import com.kuro.coffechain.utils.DTOConverter;
-import lombok.RequiredArgsConstructor;
 import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.ObjectUtils;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -20,8 +21,9 @@ import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
+import static com.kuro.coffechain.constants.Contants.*;
+
 @Service
-@RequiredArgsConstructor
 public class OrderServiceImpl implements OrderService {
 
     private final OrderRepository orderRepository;
@@ -30,25 +32,23 @@ public class OrderServiceImpl implements OrderService {
     private final MenuItemRepository menuItemRepository;
     private final CoffeeShopRepository coffeeShopRepository;
 
+    public OrderServiceImpl(OrderRepository orderRepository,
+                            DTOConverter dtoConverter,
+                            CustomerRepository customerRepository,
+                            MenuItemRepository menuItemRepository,
+                            CoffeeShopRepository coffeeShopRepository) {
+        this.orderRepository = orderRepository;
+        this.dtoConverter = dtoConverter;
+        this.customerRepository = customerRepository;
+        this.menuItemRepository = menuItemRepository;
+        this.coffeeShopRepository = coffeeShopRepository;
+    }
+
     @Transactional
     public OrderDTO processOrder(OrderDTO orderDTO) {
-        Customer customer = customerRepository.findById(orderDTO.getCustomerDTO().getCustomerId())
-                .orElse(null);
-
-        if (customer == null) {
-            customer = Customer.builder()
-                    .name(orderDTO.getCustomerDTO().getCustomerName())
-                    .mobileNumber(orderDTO.getCustomerDTO().getCustomerPhone())
-                    .address(orderDTO.getCustomerDTO().getCustomerAddress())
-                    .servedCount(0)
-                    .build();
-        }
-        // increase count time for customer to have discount later.
-        customer.setServedCount(customer.getServedCount() + 1);
-        Customer finalCustomer = customer;
-
+        Customer finalCustomer = upsertCustomer(orderDTO);
         CoffeeShop coffeeShop = coffeeShopRepository.findById(orderDTO.getCoffeeShopId())
-                .orElseThrow(() -> new NotFoundException("Shop not found. Please check again!"));
+                .orElseThrow(() -> new NotFoundException(SHOP_NOT_FOUND));
 
         var pendingOrder = getPendingOrderAndTime(orderDTO.getCoffeeShopId());
         Order order = new Order();
@@ -58,7 +58,7 @@ public class OrderServiceImpl implements OrderService {
 
         orderDTO.getItemDTO().forEach(orderDTOItemDTO -> {
             MenuItem menuItem = menuItemRepository.findById(orderDTOItemDTO.getId())
-                    .orElseThrow(() -> new NotFoundException("Item not found in the menu. Please check again!"));
+                    .orElseThrow(() -> new NotFoundException(ITEM_NOT_FOUND));
             // Get current spent money, add new amount
             BigDecimal currentSpentMoney = finalCustomer.getSpentMoney() != null ? finalCustomer.getSpentMoney() : BigDecimal.ZERO;
             BigDecimal newAmount = BigDecimal.valueOf(menuItem.getPrice() * orderDTOItemDTO.getQuantity());
@@ -71,25 +71,32 @@ public class OrderServiceImpl implements OrderService {
             orderItem.setOrder(finalOrder);
             orderItems.add(orderItem);
         });
-        customerRepository.save(finalCustomer);
+
+        customerRepository.saveAndFlush(finalCustomer);
         order.setOrderTime(new Date());
         order.setStatus(OrderStatus.PENDING);
         order.setQueuePosition(pendingOrder.getFirst());
         order.setOrderItems(orderItems);
-
+        order.setCustomer(finalCustomer);
         order = orderRepository.saveAndFlush(order);
 
-        OrderDTO processingOrderSuccess = new OrderDTO();
-        processingOrderSuccess.setId(order.getId());
-        processingOrderSuccess.setOrderStatus(OrderStatus.PENDING.name());
-        processingOrderSuccess.setWaitingTime(pendingOrder.getSecond());
-        return new OrderDTO();
+        return buildProcessingOrderDTO(orderDTO, order, pendingOrder);
     }
 
+    @Override
     public OrderDTO getOrderById(UUID orderId) {
         Order order = orderRepository.findById(orderId)
-                .orElseThrow(() -> new NotFoundException("Order not found"));
+                .orElseThrow(() -> new NotFoundException(ORDER_NOT_FOUND));
         return dtoConverter.convertToDTO(order, OrderDTO.class);
+    }
+
+    @Override
+    public String updateOrder(UUID orderId, OrderStatus orderStatus) {
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new NotFoundException(ORDER_NOT_FOUND));
+        order.setStatus(orderStatus);
+        orderRepository.save(order);
+        return "Order with id " + orderId + " has been updated";
     }
 
     /**
@@ -104,6 +111,53 @@ public class OrderServiceImpl implements OrderService {
     private Pair<Integer, String> getPendingOrderAndTime(UUID coffeeShopId) {
         int pendingOrders = orderRepository.countPendingOrdersByCoffeeShop(coffeeShopId);
         int estimatedTime = (pendingOrders * 10); // Each order takes 10 minutes
-        return Pair.of(pendingOrders + 1, "Please take your order after:" + estimatedTime + " minutes");
+        return Pair.of(pendingOrders + 1, "Please take your order after: " + estimatedTime + " minutes");
+    }
+
+
+    /**
+     * Retrieves an existing customer or creates a new one if not found.
+     * <p>
+     * If the customer exists, it increments the served count.
+     * If the customer does not exist, a new customer is created with the provided details.
+     * </p>
+     *
+     * @param orderDTO The order data containing customer details.
+     * @return The retrieved or newly created {@link Customer}.
+     */
+    private Customer upsertCustomer(OrderDTO orderDTO) {
+        CustomerDTO customerDTO = orderDTO.getCustomerDTO();
+
+        // Attempt to find an existing customer phone number
+        Customer customer = customerRepository.findByMobileNumber(customerDTO.getCustomerPhone()).orElseGet(() -> createNewCustomer(customerDTO));
+
+        // Increment served count to track customer visits
+        customer.setServedCount(customer.getServedCount() + 1);
+
+        return customer;
+    }
+
+    /**
+     * Creates a new customer instance with the provided details.
+     *
+     * @param customerDTO The customer data transfer object containing the necessary information.
+     * @return A new {@link Customer} instance.
+     */
+    private Customer createNewCustomer(CustomerDTO customerDTO) {
+        return Customer.builder()
+                .name(customerDTO.getCustomerName())
+                .mobileNumber(customerDTO.getCustomerPhone())
+                .address(customerDTO.getCustomerAddress())
+                .servedCount(0)
+                .build();
+    }
+
+    private static OrderDTO buildProcessingOrderDTO(OrderDTO orderDTO, Order order, Pair<Integer, String> pendingOrder) {
+        OrderDTO processingOrderSuccess = new OrderDTO();
+        processingOrderSuccess.setId(order.getId());
+        processingOrderSuccess.setOrderStatus(OrderStatus.PENDING.name());
+        processingOrderSuccess.setWaitingTime(pendingOrder.getSecond());
+        processingOrderSuccess.setCoffeeShopId(orderDTO.getCoffeeShopId());
+        return processingOrderSuccess;
     }
 }

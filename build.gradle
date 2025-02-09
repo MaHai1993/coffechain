@@ -40,6 +40,10 @@ dependencies {
     testImplementation 'io.cucumber:cucumber-junit:7.12.0'
     testImplementation 'org.junit.platform:junit-platform-suite:1.9.3'
 
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.9.3'
+    testImplementation 'org.mockito:mockito-core:5.2.0'
+    testImplementation 'org.mockito:mockito-junit-jupiter:5.2.0'
+
     implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.3.0'
     implementation 'org.modelmapper:modelmapper:3.1.1'
     // https://mvnrepository.com/artifact/io.jsonwebtoken/jjwt
@@ -49,6 +53,7 @@ dependencies {
     implementation 'com.fasterxml.jackson.core:jackson-databind'
     implementation 'com.fasterxml.jackson.core:jackson-annotations'
     implementation 'com.fasterxml.jackson.core:jackson-core'
+    implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310' // For UUID serialization
 }
 
 tasks.named('test') {
@@ -58,7 +63,7 @@ tasks.named('test') {
 tasks.withType(Test).configureEach {
     useJUnitPlatform()
     filter {
-        includeTestsMatching "com.kuro.coffechain.cucumber.*"
+        includeTestsMatching "com.kuro.coffechain.*"
     }
 }
 

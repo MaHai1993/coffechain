@@ -5,7 +5,8 @@ services:
     extends:
       file: ./postgresql.yml
       service: postgresql
-  kafka:
-    extends:
-      file: ./kafka.yml
-      service: kafka
+# Currently don't need kafka, when re-architecture we will need this.
+#  kafka:
+#    extends:
+#      file: ./kafka.yml
+#      service: kafka

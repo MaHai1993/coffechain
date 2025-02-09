@@ -17,4 +17,5 @@ public class OrderDTO {
     private String orderStatus;
     private String waitingTime;
     private BigDecimal totalPrice;
+    private String status;
 }
